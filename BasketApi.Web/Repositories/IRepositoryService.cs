@@ -8,6 +8,7 @@ namespace BasketApi.Repositories
     public interface IRepositoryService
     {
         Task<BasketModel> CreateBasket(BasketModel basketModel);
+        Task<BasketModel> GetBasketFromId(int id);
     }
 
     public class InMemoryRepositoryService : IRepositoryService
@@ -23,6 +24,10 @@ namespace BasketApi.Repositories
             return basketModel;
         }
 
-        
+        public async Task<BasketModel> GetBasketFromId(int id)
+        {
+            var getBasketTask = Task.Run(() => Baskets.FirstOrDefault(x => x.Id == id));
+            return await getBasketTask;
+        }
     }
 }

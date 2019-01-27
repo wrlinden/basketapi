@@ -18,14 +18,19 @@ namespace BasketApi.Client
             _client = new HttpClient();
         }
 
-
-
-
         public async Task<BasketContract> CreateBasket(BasketContract basketContract)
         {
             var response = await _client.PostAsJsonAsync(_baseAddress, basketContract);
             var newBasketContract = await response.Content.ReadAsAsync<BasketContract>();
             return newBasketContract;
+        }
+
+        public async Task<BasketContract> GetBasketById(int id)
+        {
+            var response = await _client.GetAsync(_baseAddress + $"{id}");
+            var basketContract = await response.Content.ReadAsAsync<BasketContract>();
+
+            return basketContract;
         }
 
     }

@@ -29,5 +29,15 @@ namespace BasketApi.Controllers
         {
             return await _basketService.CreateBasketAsync(basket);
         }
+
+        
+        [HttpGet]
+        // Get basket by Id
+        // GET: api/Basket/{id}
+        public async Task<BasketContract> Get([FromUri] int id)
+        {
+            var basket = await _basketService.GetBasket(id);
+            return basket;
+        }
     }
 }

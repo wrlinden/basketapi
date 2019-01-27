@@ -28,6 +28,15 @@ namespace BasketApi.Tests.Controllers
             _owinServer = WebApp.Start<Startup>(url: BaseAddress);
             _client = new BasketClient(BaseAddress);
         }
+        [TestCleanup]
+        public void TearDown()
+        {
+            this.Dispose();
+        }
+        public void Dispose()
+        {
+            _owinServer.Dispose();
+        }
 
 
         [TestMethod]
@@ -39,17 +48,24 @@ namespace BasketApi.Tests.Controllers
         }
 
 
-
-        [TestCleanup]
-        public void TearDown()
+        [TestMethod]
+        public async Task GetBasketById()
         {
-            this.Dispose();
+
+            // Create a Basket with one Item in it
+            var expectedBasketContract = GenerateBasketContract(1);
+            var createdResponseBasketContract = await _client.CreateBasket(expectedBasketContract);
+
+            // Test the returned response has the correct values
+            Assert.AreEqual(expectedBasketContract.Id, createdResponseBasketContract.Id);
+            Assert.AreEqual(expectedBasketContract.Items[0].ContractItem.Description, createdResponseBasketContract.Items[0].ContractItem.Description);
+
+            // Test the data comes back correct from the API
+            var response = await _client.GetBasketById(expectedBasketContract.Id);
+            CompareExpectedAndActualBasketContract(expectedBasketContract, response);
+
         }
 
-        public void Dispose()
-        {
-            _owinServer.Dispose();
-        }
 
         private static IList<BasketContractItem> GenerateBasketContractItems(int number)
         {

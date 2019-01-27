@@ -12,6 +12,7 @@ namespace BasketApi.Services
     public interface IBasketService
     {
         Task<BasketContract> CreateBasketAsync(BasketContract basket);
+        Task<BasketContract> GetBasket(int id);
     }
 
 
@@ -43,6 +44,13 @@ namespace BasketApi.Services
 
         }
 
+        public async Task<BasketContract> GetBasket(int id)
+        {
+            var basket = await _repositoryService.GetBasketFromId(id);
+            var basketContract = MapBasketModelToContract(basket);
+
+            return basketContract;
+        }
 
         private static BasketContractItem MapBasketModelItemToContract(BasketModelItem basketModelItem)
         {
