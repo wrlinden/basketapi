@@ -1,4 +1,5 @@
-﻿using System.Net.Http;
+﻿using System;
+using System.Net.Http;
 using System.Threading.Tasks;
 using BasketApi.Contracts;
 
@@ -31,6 +32,28 @@ namespace BasketApi.Client
             var basketContract = await response.Content.ReadAsAsync<BasketContract>();
 
             return basketContract;
+        }
+
+        public async Task<BasketContractItem> AddBasketItem(int basketContractId, BasketContractItem basketContractItem)
+        {
+            var response = await _client.PostAsJsonAsync(_baseAddress + $"{basketContractId}/item", basketContractItem);
+
+            ThrowExceptionIfUnsuccessfullStatusCode(response);
+
+            var newBasketContractItem = await response.Content.ReadAsAsync<BasketContractItem>();
+            return newBasketContractItem;
+        }
+
+
+
+        private static void ThrowExceptionIfUnsuccessfullStatusCode(HttpResponseMessage response)
+        {
+
+            if (!response.IsSuccessStatusCode)
+                throw new Exception("Problem with request to Add basket Item endpoint with Response : " +
+                                    $"{response.StatusCode}\n " +
+                                    $"{response.RequestMessage}\n " +
+                                    $"{response.ReasonPhrase}");
         }
 
     }

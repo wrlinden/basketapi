@@ -67,6 +67,17 @@ namespace BasketApi.Tests.Controllers
         }
 
 
+        [TestMethod]
+        public async Task AddItemToBasket()
+        {
+            var expectedBasketContract = GenerateBasketContract(1);
+            await _client.CreateBasket(expectedBasketContract);
+            var expectedBasketContractItem = Fixture.Create<BasketContractItem>();
+
+            var responseBasketContractItem = await _client.AddBasketItem(expectedBasketContract.Id, expectedBasketContractItem);
+            CompareExpectedAndActualContractItem(expectedBasketContractItem, responseBasketContractItem);
+        }
+
         private static IList<BasketContractItem> GenerateBasketContractItems(int number)
         {
             var generatedContractBasketItems = Fixture.CreateMany<BasketContractItem>(number).ToList();

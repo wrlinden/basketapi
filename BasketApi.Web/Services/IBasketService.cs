@@ -13,6 +13,8 @@ namespace BasketApi.Services
     {
         Task<BasketContract> CreateBasketAsync(BasketContract basket);
         Task<BasketContract> GetBasket(int id);
+        Task<BasketContractItem> AddItemToBasketAsync(int basketId, BasketContractItem basketContractItem);
+
     }
 
 
@@ -50,6 +52,14 @@ namespace BasketApi.Services
             var basketContract = MapBasketModelToContract(basket);
 
             return basketContract;
+        }
+
+        public async Task<BasketContractItem> AddItemToBasketAsync(int basketId, BasketContractItem basketContractItem)
+        {
+            var basketModelItem = MapBasketContractItemToModel(basketContractItem);
+
+            var newBasketModelItem = await _repositoryService.AddItemToBasket(basketId, basketModelItem);
+            return newBasketModelItem != null ? MapBasketModelItemToContract(newBasketModelItem) : null;
         }
 
         private static BasketContractItem MapBasketModelItemToContract(BasketModelItem basketModelItem)

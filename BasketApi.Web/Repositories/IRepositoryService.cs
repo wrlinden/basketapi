@@ -9,6 +9,8 @@ namespace BasketApi.Repositories
     {
         Task<BasketModel> CreateBasket(BasketModel basketModel);
         Task<BasketModel> GetBasketFromId(int id);
+        Task<BasketModelItem> AddItemToBasket(int basketId, BasketModelItem basketModelItem);
+
     }
 
     public class InMemoryRepositoryService : IRepositoryService
@@ -28,6 +30,27 @@ namespace BasketApi.Repositories
         {
             var getBasketTask = Task.Run(() => Baskets.FirstOrDefault(x => x.Id == id));
             return await getBasketTask;
+        }
+
+
+        public async Task<BasketModelItem> AddItemToBasket(int basketId, BasketModelItem basketModelItem)
+        {
+
+            var basketToAddTo = Baskets.FirstOrDefault(basket => basket.Id == basketId);
+            var basketItemToAddTo = basketToAddTo?.Items.FirstOrDefault(item => item.Id == basketModelItem.Id);
+
+            // Only add to an existing basket; only add a basket item if it does not already exist
+            if (basketToAddTo == null || basketItemToAddTo != null) return null;
+
+
+            await Task.Run(() =>
+            {
+                basketToAddTo.Items.Add(basketModelItem);
+            });
+
+
+            return basketModelItem;
+
         }
     }
 }

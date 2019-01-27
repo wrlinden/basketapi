@@ -39,5 +39,24 @@ namespace BasketApi.Controllers
             var basket = await _basketService.GetBasket(id);
             return basket;
         }
+
+        
+        [HttpPost]
+        [Route("api/basket/{id}/item")]
+        // Add item to Basket
+        // POST: api/Basket/{id}/item
+        public async Task<BasketContractItem> Post([FromUri] int id, [FromBody] BasketContractItem basketContractItem)
+        {
+            var addedItem = await _basketService.AddItemToBasketAsync(id, basketContractItem);
+            if (addedItem != null) return addedItem;
+
+            // ToDo Abstract this HttoResonseMessage generation
+            var resp = new HttpResponseMessage(HttpStatusCode.BadRequest)
+            {
+                Content = new StringContent("Bad request"),
+                ReasonPhrase = $"Basket does not exist, or basketItem already exists. BasketId {id} / ContractItemId {basketContractItem.Id}"
+            };
+            throw new HttpResponseException(resp);
+        }
     }
 }
