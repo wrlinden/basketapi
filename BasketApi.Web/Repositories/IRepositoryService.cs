@@ -12,6 +12,7 @@ namespace BasketApi.Repositories
         Task<BasketModelItem> AddItemToBasket(int basketId, BasketModelItem basketModelItem);
         Task<bool> RemoveItemFromBasket(int basketId, int basketItemId);
         Task<BasketModel> RemoveItemsFromBasket(int basketId);
+        Task<BasketModelItem> AddToBasketItem(int basketId, int basketItemId, int qty);
 
     }
 
@@ -82,6 +83,30 @@ namespace BasketApi.Repositories
             }
 
             return null;
+        }
+
+        public async Task<BasketModelItem> AddToBasketItem(int basketId, int basketItemId, int qty)
+        {
+
+            var basketToAddTo = Baskets.FirstOrDefault(basket => basket.Id == basketId);
+            var basketItemToAddTo = basketToAddTo?.Items.FirstOrDefault(item => item.Id == basketItemId);
+
+
+            if (basketToAddTo == null || basketItemToAddTo == null) return null;
+
+
+            BasketModelItem basketItemAddedTo = null;
+            await Task.Run(() =>
+            {
+                // ToDo Assumption, qty only goes to 0, could also check for zero vals not to hit "real" repo
+                basketItemToAddTo.Qty += qty;
+                if (basketItemToAddTo.Qty < 1) basketItemToAddTo.Qty = 0;
+                var basketAddedTo = Baskets.FirstOrDefault(basket => basket.Id == basketId);
+                basketItemAddedTo = basketAddedTo?.Items.FirstOrDefault(item => item.Id == basketItemId);
+            });
+
+
+            return basketItemAddedTo;
         }
     }
 }

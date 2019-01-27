@@ -129,6 +129,33 @@ namespace BasketApi.Tests.Controllers
 
         }
 
+        [TestMethod]
+        public async Task AddToBasketItemQuantity()
+        {
+
+            var basketContract = GenerateBasketContract(1);
+            var createdBasketContract = await _client.CreateBasket(basketContract);
+            var createdBasketContractItem = createdBasketContract.Items[0];
+            var originalQty = createdBasketContractItem.Qty;
+
+            // Add one to basket item
+            var updatedBasketItem = await _client.AddToBasketItem(createdBasketContract.Id, createdBasketContractItem.Id, 1);
+            Assert.AreEqual(originalQty + 1, updatedBasketItem.Qty);
+
+            // Add three more to the same basket item
+            updatedBasketItem = await _client.AddToBasketItem(createdBasketContract.Id, createdBasketContractItem.Id, 3);
+            Assert.AreEqual(originalQty + 4, updatedBasketItem.Qty);
+
+            // Remove all four items from the basket
+            updatedBasketItem = await _client.RemoveFromBasketItem(createdBasketContract.Id, createdBasketContractItem.Id, 4);
+            Assert.AreEqual(originalQty, updatedBasketItem.Qty);
+
+            // Remove more items than what is left in the basket item
+            updatedBasketItem = await _client.RemoveFromBasketItem(createdBasketContract.Id, createdBasketContractItem.Id, updatedBasketItem.Qty + 30);
+            Assert.AreEqual(0, updatedBasketItem.Qty);
+
+
+        }
 
 
         // Helper Methods

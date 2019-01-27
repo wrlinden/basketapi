@@ -61,8 +61,30 @@ namespace BasketApi.Client
         }
 
 
+        public async Task<BasketContractItem> AddToBasketItem(int basketContractId, int basketContractItemId, int qty = 1)
+        {
+            return await GetQtyUpdatedBasketContractItem(basketContractId, basketContractItemId, qty);
+        }
+
+        public async Task<BasketContractItem> RemoveFromBasketItem(int basketContractId, int basketContractItemId, int qty = 1)
+        {
+            return await GetQtyUpdatedBasketContractItem(basketContractId, basketContractItemId, 0 - qty);
+        }
+
 
         // Helper Methods
+
+        private async Task<BasketContractItem> GetQtyUpdatedBasketContractItem(int basketContractId, int basketContractItemId, int qty)
+        {
+            var response = await _client.PutAsJsonAsync(_baseAddress + $"{basketContractId}/item/{basketContractItemId}", qty);
+
+            ThrowExceptionIfUnsuccessfullStatusCode(response);
+
+            var updatedBasketContractItem = await response.Content.ReadAsAsync<BasketContractItem>();
+            return updatedBasketContractItem;
+        }
+
+
         private static void ThrowExceptionIfUnsuccessfullStatusCode(HttpResponseMessage response)
         {
 

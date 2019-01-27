@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
+﻿using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
@@ -51,11 +48,7 @@ namespace BasketApi.Controllers
             if (addedItem != null) return addedItem;
 
             // ToDo Abstract this HttoResonseMessage generation
-            var resp = new HttpResponseMessage(HttpStatusCode.BadRequest)
-            {
-                Content = new StringContent("Bad request"),
-                ReasonPhrase = $"Basket does not exist, or basketItem already exists. BasketId {id} / ContractItemId {basketContractItem.Id}"
-            };
+            var resp = GetResponseMessage(id);
             throw new HttpResponseException(resp);
         }
 
@@ -72,6 +65,8 @@ namespace BasketApi.Controllers
 
             if (response) return ResponseMessage(new HttpResponseMessage(HttpStatusCode.NoContent));
 
+
+            // ToDo : Add test to remove an item that does not exist
             var resp = GetResponseMessage(basketId, basketItemId);
             throw new HttpResponseException(resp);
         }
@@ -87,14 +82,32 @@ namespace BasketApi.Controllers
             var removedFromBasket = await _basketService.RemoveBasketItemsAsync(basketId);
             if (removedFromBasket != null) return removedFromBasket;
 
-            // ToDo Asumes BadRequest when Item cant be added
+            // ToDo Asumes BadRequest when Item cant be deleted
             var resp = GetResponseMessage(basketId);
             throw new HttpResponseException(resp);
         }
 
 
+        
+        [HttpPut]
+        [Route("api/basket/{basketId}/item/{basketItemId}")]
+        // PUT: api/Basket/{id}/item/{id}
+        // Use for incrementing or decrementing basket item quantities (client contains helper methods to seperate add and remove functionality)
+        // Returns the updated BasketContractItem
+        public async Task<BasketContractItem> Put([FromUri] int basketId, [FromUri] int basketItemId, [FromBody] int qty)
+        {
+            // Treats qty = zero the same as any, for performance this should/could be changed.
+
+            var addedItem = await _basketService.AddToBasketItemAsync(basketId, basketItemId, qty);
+            if (addedItem != null) return addedItem;
+
+            // ToDo Asumes BadRequest when Item cant be added
+            var resp = GetResponseMessage(basketId, basketItemId);
+            throw new HttpResponseException(resp);
+        }
+
         // Helper Methods
-        private HttpResponseMessage GetResponseMessage(int basketId, int? basketItemId = null)
+        private static HttpResponseMessage GetResponseMessage(int basketId, int? basketItemId = null)
         {
             return new HttpResponseMessage(HttpStatusCode.BadRequest)
             {
