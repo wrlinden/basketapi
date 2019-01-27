@@ -329,3 +329,4 @@ ASALocalRun/
 # MFractors (Xamarin productivity tool) working folder 
 .mfractor/
 /BasketApi.v3.*
+/BasketApi.Contracts/*.v3.ncrunchproject
