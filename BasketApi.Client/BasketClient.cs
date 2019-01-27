@@ -44,8 +44,19 @@ namespace BasketApi.Client
             return newBasketContractItem;
         }
 
+        public async Task<bool> RemoveFromBasket(int basketContractId, int basketContractItemId)
+        {
+            var response = await _client.DeleteAsync(_baseAddress + $"{basketContractId}/item/{basketContractItemId}");
+
+            ThrowExceptionIfUnsuccessfullStatusCode(response);
+
+            return true;
+
+        }
 
 
+
+        // Helper Methods
         private static void ThrowExceptionIfUnsuccessfullStatusCode(HttpResponseMessage response)
         {
 

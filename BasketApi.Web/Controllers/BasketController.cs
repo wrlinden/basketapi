@@ -58,5 +58,26 @@ namespace BasketApi.Controllers
             };
             throw new HttpResponseException(resp);
         }
+
+        
+        // Returns 204 on success / bad request on fail
+        [HttpDelete]
+        [Route("api/basket/{basketId}/item/{basketItemId}")]
+        // Remove item from basket
+        // DELETE: api/Basket/{basketId}/item/{basketItemId}
+        public async Task<IHttpActionResult> Delete([FromUri] int basketId, [FromUri] int basketItemId)
+        {
+
+            var response = await _basketService.RemoveItemFromBasketAsync(basketId, basketItemId);
+
+            if (response) return ResponseMessage(new HttpResponseMessage(HttpStatusCode.NoContent));
+
+            var resp = new HttpResponseMessage(HttpStatusCode.BadRequest)
+            {
+                Content = new StringContent("Bad request"),
+                ReasonPhrase = $"Basket or BasketItem does not exist. BasketId {basketId} / BasketItemId {basketItemId}"
+            };
+            throw new HttpResponseException(resp);
+        }
     }
 }

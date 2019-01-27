@@ -10,6 +10,7 @@ namespace BasketApi.Repositories
         Task<BasketModel> CreateBasket(BasketModel basketModel);
         Task<BasketModel> GetBasketFromId(int id);
         Task<BasketModelItem> AddItemToBasket(int basketId, BasketModelItem basketModelItem);
+        Task<bool> RemoveItemFromBasket(int basketId, int basketItemId);
 
     }
 
@@ -47,10 +48,20 @@ namespace BasketApi.Repositories
             {
                 basketToAddTo.Items.Add(basketModelItem);
             });
-
-
+            
             return basketModelItem;
+        }
 
+        public async Task<bool> RemoveItemFromBasket(int basketId, int basketItemId)
+        {
+            var basketToRemoveFrom = Baskets.FirstOrDefault(basket => basket.Id == basketId);
+            var basketItemToRemove = basketToRemoveFrom?.Items.SingleOrDefault(item => item.Id == basketItemId);
+
+            var removeFromBasketTask = Task.Run(() => basketToRemoveFrom != null && basketToRemoveFrom.Items.Remove(basketItemToRemove));
+
+            if (basketItemToRemove != null) return await removeFromBasketTask;
+
+            return false;
         }
     }
 }

@@ -14,6 +14,8 @@ namespace BasketApi.Services
         Task<BasketContract> CreateBasketAsync(BasketContract basket);
         Task<BasketContract> GetBasket(int id);
         Task<BasketContractItem> AddItemToBasketAsync(int basketId, BasketContractItem basketContractItem);
+        Task<bool> RemoveItemFromBasketAsync(int basketId, int basketItemId);
+
 
     }
 
@@ -61,7 +63,14 @@ namespace BasketApi.Services
             var newBasketModelItem = await _repositoryService.AddItemToBasket(basketId, basketModelItem);
             return newBasketModelItem != null ? MapBasketModelItemToContract(newBasketModelItem) : null;
         }
+        public async Task<bool> RemoveItemFromBasketAsync(int basketId, int basketItemId)
+        {
+            bool itemRemoved = await _repositoryService.RemoveItemFromBasket(basketId, basketItemId);
+            return itemRemoved;
+        }
 
+
+        // Helper Methods
         private static BasketContractItem MapBasketModelItemToContract(BasketModelItem basketModelItem)
         {
             return new BasketContractItem

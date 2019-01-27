@@ -78,6 +78,40 @@ namespace BasketApi.Tests.Controllers
             CompareExpectedAndActualContractItem(expectedBasketContractItem, responseBasketContractItem);
         }
 
+        [TestMethod]
+        [ExpectedException(typeof(Exception))]
+        public async Task CreatingDupplicateItemThrowsException()
+        {
+            // Setup a new basket and try to re-add existing basketItem to it 
+            var basketContract = GenerateBasketContract(1);
+            var createdBasketContract = await _client.CreateBasket(basketContract);
+            await _client.AddBasketItem(1, createdBasketContract.Items[0]);
+
+        }
+
+        [TestMethod]
+        public async Task RemoveItemFromBasket()
+        {
+
+            var expectedBasketContract = GenerateBasketContract(1);
+            var responseBasketContract = await _client.CreateBasket(expectedBasketContract);
+
+            var basketContractItemToRemove = responseBasketContract.Items[0];
+
+            // Remove an existing basket item
+            var responseRemovedFromBasket = await _client.RemoveFromBasket(responseBasketContract.Id, basketContractItemToRemove.Id);
+            Assert.AreEqual(true, responseRemovedFromBasket);
+
+            // Confirm item has been removed 
+            var basketWithRemovedItem = await _client.GetBasketById(expectedBasketContract.Id);
+            var containsItem = basketWithRemovedItem.Items.Contains(basketContractItemToRemove);
+            Assert.AreEqual(false, containsItem);
+
+        }
+
+
+
+        // Helper Methods
         private static IList<BasketContractItem> GenerateBasketContractItems(int number)
         {
             var generatedContractBasketItems = Fixture.CreateMany<BasketContractItem>(number).ToList();
