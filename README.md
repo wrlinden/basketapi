@@ -11,11 +11,13 @@ RESTfull WebAPI based demo to manage an online order's basket items.
     * Probably create or get basket item
     * Test from client inwards through API 
   * Repeat for each endpoint / function required
+* Do any final refactoring
 * Time permits - Wire in AWS CodeDeploy/Pipeline or AppV or such
 * Documentation if needed
 
 ## Assumptions
-* Security is dealth with externally, probably at network level (Subnets, SecurityGroups etc.)
+* Security is dealt with externally, probably at network level (Subnets, SecurityGroups etc.)
+* Data model IDs are generated from the outside (for purposes of InMemoryRepository produced)
 * Single tenant API
 * "Integration" testing via the Client is adequate at this stage. 
 * Stats and graphs out of scope 

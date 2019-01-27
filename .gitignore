@@ -330,3 +330,4 @@ ASALocalRun/
 .mfractor/
 /BasketApi.v3.*
 /BasketApi.Contracts/*.v3.ncrunchproject
+/*/*.v3.ncrunchproject
