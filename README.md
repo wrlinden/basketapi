@@ -1,5 +1,10 @@
 # basketapi
-RESTfull WebAPI based demo to manage an online order's basket items.
+RESTfull WebAPI based demo to manage an online order's basket items.  
+
+CI Build:  
+https://ci.appveyor.com/project/wlinde01/basketapi/
+
+
 
 ## ToDo / POA
 * Introduce blank WebApi project 
@@ -19,6 +24,7 @@ RESTfull WebAPI based demo to manage an online order's basket items.
 * Security is dealt with externally, probably at network level (Subnets, SecurityGroups etc.)
 * Data model IDs are generated from the outside (for purposes of InMemoryRepository produced)
 * Single tenant API
+* Async is preferred
 * "Integration" testing via the Client is adequate at this stage. 
 * Stats and graphs out of scope 
 * Logging optional at this stage - (might add a filter based quick solution - time permits) 
