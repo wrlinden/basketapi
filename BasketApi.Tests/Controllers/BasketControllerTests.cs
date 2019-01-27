@@ -109,6 +109,26 @@ namespace BasketApi.Tests.Controllers
 
         }
 
+        [TestMethod]
+        public async Task RemoveAllItemsFromBasket()
+        {
+            // Create a basket with 5 items in it
+            var generatedBasketContract = GenerateBasketContract(5);
+            var responseBasketContract = await _client.CreateBasket(generatedBasketContract);
+
+            // confirm the basket has 5 items in it
+            Assert.AreEqual(5, responseBasketContract.Items.Count);
+
+            // remove all the items from the basket
+            await _client.RemoveBasketItems(generatedBasketContract.Id);
+            var basketWithAllItemsRemoved = await _client.GetBasketById(generatedBasketContract.Id);
+
+
+            // confirm that the basket now has no items in it
+            Assert.AreEqual(0, basketWithAllItemsRemoved.Items.Count);
+
+        }
+
 
 
         // Helper Methods

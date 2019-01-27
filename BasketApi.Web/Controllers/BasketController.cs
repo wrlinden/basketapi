@@ -72,12 +72,36 @@ namespace BasketApi.Controllers
 
             if (response) return ResponseMessage(new HttpResponseMessage(HttpStatusCode.NoContent));
 
-            var resp = new HttpResponseMessage(HttpStatusCode.BadRequest)
+            var resp = GetResponseMessage(basketId, basketItemId);
+            throw new HttpResponseException(resp);
+        }
+
+        
+        [HttpDelete]
+        [Route("api/basket/{basketId}/items")]
+        // Remove all items from basket
+        // DELETE: api/Basket/{basketId}/items
+        // Returns BasketContract on success / bad request on fail
+        public async Task<BasketContract> Delete(int basketId)
+        {
+            var removedFromBasket = await _basketService.RemoveBasketItemsAsync(basketId);
+            if (removedFromBasket != null) return removedFromBasket;
+
+            // ToDo Asumes BadRequest when Item cant be added
+            var resp = GetResponseMessage(basketId);
+            throw new HttpResponseException(resp);
+        }
+
+
+        // Helper Methods
+        private HttpResponseMessage GetResponseMessage(int basketId, int? basketItemId = null)
+        {
+            return new HttpResponseMessage(HttpStatusCode.BadRequest)
             {
                 Content = new StringContent("Bad request"),
                 ReasonPhrase = $"Basket or BasketItem does not exist. BasketId {basketId} / BasketItemId {basketItemId}"
             };
-            throw new HttpResponseException(resp);
         }
+
     }
 }
