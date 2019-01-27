@@ -17,9 +17,40 @@ RESTfull WebAPI based demo to manage an online order's basket items.
 ## Assumptions
 * Security is dealth with externally, probably at network level (Subnets, SecurityGroups etc.)
 * Single tenant API
+* "Integration" testing via the Client is adequate at this stage. 
 * Stats and graphs out of scope 
 * Logging optional at this stage - (might add a filter based quick solution - time permits) 
 * Probably has rational db underlying Repo (building something that should fit simple normalised architecture)
 * Swagger documentation Adequate 
 * Assumptions encountered during dev:
-  * 
+
+
+
+### Api Specs:
+
+**Create a new basket**  
+_POST /api/Basket_  
+Param/body BasketContract  
+Returns BasketContract  
+
+**Get basket by Id**  
+_GET /api/Basket/\{id\}_  
+Returns BasketContract
+
+**Create new item in basket**  
+_POST /api/basket/\{id\}/item__  
+Param/body BasketContractItem
+Returns BasketContractItem
+
+**Delete item from basket**  
+_DELETE /api/basket/\{basketId\}/item/\{basketItemId\}__  
+Returns 204 
+
+**Delete all items from a basket**
+_DELETE /api/basket/\{basketId\}/items__  
+Returns 204 
+
+**Increment or decrement Basket Item quantity.**  
+_PUT /api/basket/\{basketId\}/item/\{basketItemId\}__  
+Param/body _qty to inc/dec_
+
