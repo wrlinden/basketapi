@@ -23,9 +23,7 @@ namespace BasketApi.Repositories
 
         public async Task<BasketModel> CreateBasket(BasketModel basketModel)
         {
-            if (Baskets.Any(item => item.Id == basketModel.Id))
-                throw new System.Exception($"Basket item ${basketModel.Id} already exists.");
-
+            if (Baskets.Any(item => item.Id == basketModel.Id)) return null;
             await Task.Run(() => Baskets.Add(basketModel));
             return basketModel;
         }

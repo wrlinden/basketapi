@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using BasketApi.Contracts;
 using BasketApi.Services;
+using Newtonsoft.Json;
 
 namespace BasketApi.Controllers
 {
@@ -12,12 +13,6 @@ namespace BasketApi.Controllers
 
         private readonly IBasketService _basketService;
 
-        
-        //public BasketController()
-        //{
-        //    _basketService = new BasketService();
-        //}
-        
         public BasketController(IBasketService basketService)
         {
             _basketService = basketService;
@@ -27,7 +22,9 @@ namespace BasketApi.Controllers
         // POST: api/Basket
         public async Task<BasketContract> Post([FromBody] BasketContract basket)
         {
-            return await _basketService.CreateBasketAsync(basket);
+            var result = await _basketService.CreateBasketAsync(basket);
+            if (result == null) ThrowBadRequestException($"The basket could not be created. Request : ${JsonConvert.SerializeObject(basket)}");
+            return result;
         }
 
         
@@ -37,6 +34,7 @@ namespace BasketApi.Controllers
         public async Task<BasketContract> Get([FromUri] int id)
         {
             var basket = await _basketService.GetBasket(id);
+            if (basket == null) ThrowBadRequestException($"The basket could not be found. BasketId : ${id}");
             return basket;
         }
 
@@ -65,9 +63,7 @@ namespace BasketApi.Controllers
         {
 
             var response = await _basketService.RemoveItemFromBasketAsync(basketId, basketItemId);
-
             if (response) return ResponseMessage(new HttpResponseMessage(HttpStatusCode.NoContent));
-
 
             // ToDo : Add test to remove an item that does not exist
             var resp = GetResponseMessage(basketId, basketItemId);
@@ -117,6 +113,17 @@ namespace BasketApi.Controllers
                 Content = new StringContent("Bad request"),
                 ReasonPhrase = $"Basket or BasketItem does not exist. BasketId {basketId} / BasketItemId {basketItemId}"
             };
+        }
+
+        private static HttpResponseMessage ThrowBadRequestException(string message)
+        {
+            var responseMessage = new HttpResponseMessage(HttpStatusCode.BadRequest)
+            {
+                Content = new StringContent(message),
+                ReasonPhrase = message
+            };
+
+            throw new HttpResponseException(responseMessage);
         }
 
     }

@@ -24,13 +24,17 @@ https://ci.appveyor.com/project/wlinde01/basketapi/
 * Security is dealt with externally, probably at network level (Subnets, SecurityGroups etc.)
 * Data model IDs are generated from the outside (for purposes of InMemoryRepository produced)
 * Single tenant API
-* Async is preferred
+* Async is preferred and implemented
 * "Integration" testing via the Client is adequate at this stage. 
 * Stats and graphs out of scope 
 * Logging optional at this stage - (might add a filter based quick solution - time permits) 
 * Probably has rational db underlying Repo (building something that should fit simple normalised architecture)
 * Swagger documentation Adequate 
 * Assumptions encountered during dev:
+  * Nothing sensitive goes into requests, so logging request data outwards is safe
+  * Bad Request response (400s) is adequate from the controller endpoints when the service & repository can not complete it's job (like deleting an item that does not exist)
+  * Bad request will not be thrown by the controller for Actual exceptions encountered in the stack, those will bubble upwards and ultimately result in Internal Server Error (500s) responses
+  
 
 
 

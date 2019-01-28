@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web.Http;
+﻿using System.Web.Http;
 using BasketApi.App_Start;
 using BasketApi.Repositories;
 using BasketApi.Services;
 using Unity;
-using Unity.Injection;
 using Unity.Lifetime;
 
 namespace BasketApi
@@ -18,7 +14,7 @@ namespace BasketApi
             // Web API configuration and services
             var container = new UnityContainer();
 
-            // Scope set to simplify manual / automated testing
+            // Scope set to per thread to simplify manual / automated testing
             container.RegisterType<IRepositoryService, InMemoryRepositoryService>(new PerThreadLifetimeManager());
             container.RegisterType<IBasketService, BasketService>(new HierarchicalLifetimeManager());
 

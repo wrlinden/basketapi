@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Web;
 using BasketApi.Contracts;
 using BasketApi.Models;
 using BasketApi.Repositories;
@@ -37,16 +35,20 @@ namespace BasketApi.Services
             // ToDo Asumes that IDs are generated from the outside and are unique
             var basketModel = MapBasketContractToModel(basketContract);
             var newBasket = await _repositoryService.CreateBasket(basketModel);
-            return MapBasketModelToContract(newBasket);
+            if (newBasket != null) return MapBasketModelToContract(newBasket);
+
+            // Asumes null means something went wrong, hiher up in the stack needs to deal with this
+            return null;
 
         }
 
         public async Task<BasketContract> GetBasket(int id)
         {
             var basket = await _repositoryService.GetBasketFromId(id);
-            var basketContract = MapBasketModelToContract(basket);
 
-            return basketContract;
+            if (basket == null) return null;
+
+            return MapBasketModelToContract(basket);
         }
 
         public async Task<BasketContractItem> AddItemToBasketAsync(int basketId, BasketContractItem basketContractItem)
@@ -58,7 +60,7 @@ namespace BasketApi.Services
         }
         public async Task<bool> RemoveItemFromBasketAsync(int basketId, int basketItemId)
         {
-            bool itemRemoved = await _repositoryService.RemoveItemFromBasket(basketId, basketItemId);
+            var itemRemoved = await _repositoryService.RemoveItemFromBasket(basketId, basketItemId);
             return itemRemoved;
         }
 

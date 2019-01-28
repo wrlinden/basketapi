@@ -48,6 +48,15 @@ namespace BasketApi.Tests.Controllers
 
 
         [TestMethod]
+        [ExpectedException(typeof(Exception))]
+        public async Task CreatingBasketThatAlreadyExistsThrowsException()
+        {
+            var expectedBasketContract = GenerateBasketContract(1);
+            await _client.CreateBasket(expectedBasketContract);
+            await _client.CreateBasket(expectedBasketContract);
+        }
+
+        [TestMethod]
         public async Task GetBasketById()
         {
 
@@ -63,6 +72,13 @@ namespace BasketApi.Tests.Controllers
             var response = await _client.GetBasketById(expectedBasketContract.Id);
             CompareExpectedAndActualBasketContract(expectedBasketContract, response);
 
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(Exception))]
+        public async Task GetBasketByIdThatDoesNotExistThrowsException()
+        {
+            await _client.GetBasketById(-1);
         }
 
 
@@ -85,6 +101,32 @@ namespace BasketApi.Tests.Controllers
             var basketContract = GenerateBasketContract(1);
             var createdBasketContract = await _client.CreateBasket(basketContract);
             await _client.AddBasketItem(1, createdBasketContract.Items[0]);
+
+        }
+
+
+        [TestMethod]
+        [ExpectedException(typeof(Exception))]
+        public async Task RemovingNoneExistingItemThrowsException()
+        {
+            // Remove an item that does not exist
+            await _client.RemoveFromBasket(-1, -1);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(Exception))]
+        public async Task RemovingNoneExistingItemsThrowsException()
+        {
+            // Remove items from a basket that does not exist
+            await _client.RemoveBasketItems(-1);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(Exception))]
+        public async Task ChangingNoneExistingBasketQuantitiesThrowsException()
+        {
+            // Increase quantity from an item that does not exist
+            await _client.AddToBasketItem(-1, -1, 2);
 
         }
 
