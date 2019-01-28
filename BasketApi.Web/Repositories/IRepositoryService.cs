@@ -18,6 +18,7 @@ namespace BasketApi.Repositories
 
     public class InMemoryRepositoryService : IRepositoryService
     {
+
         private static readonly IList<BasketModel> Baskets = new List<BasketModel>();
 
         public async Task<BasketModel> CreateBasket(BasketModel basketModel)

@@ -11,10 +11,13 @@ namespace BasketApi.Controllers
     {
 
         private readonly IBasketService _basketService;
-        public BasketController()
-        {
-            _basketService = new BasketService();
-        }
+
+        
+        //public BasketController()
+        //{
+        //    _basketService = new BasketService();
+        //}
+        
         public BasketController(IBasketService basketService)
         {
             _basketService = basketService;

@@ -27,20 +27,11 @@ namespace BasketApi.Services
     {
         private readonly IRepositoryService _repositoryService;
 
-        public BasketService()
-        {
-            // ToDo Remove once tests and IOC are in place
-            _repositoryService = new InMemoryRepositoryService();
-        }
-
         public BasketService(IRepositoryService repositoryService)
         {
             _repositoryService = repositoryService;
         }
-        //public BasketService(IRepositoryService repositoryService)
-        //{
-        // for IoC 
-        //}
+
         public async Task<BasketContract> CreateBasketAsync(BasketContract basketContract)
         {
             // ToDo Asumes that IDs are generated from the outside and are unique
