@@ -1,44 +1,44 @@
-# basketapi
+# BasketApi
 RESTfull WebAPI based demo to manage an online order's basket items.  
+Built using WebApi on top of .Net Framework 4.6, using C#.
 
-CI Build:  
+### How to Run
+- Clone or grab the repo from https://github.com/wrlinden/basketapi
+- Open solution file (BasketApi.sln) in Visual Studio (Tested against versions 2015 & 2017)
+- Restore Nuget packages for the solution
+- Build and Run 
+- Run tests with your favourite test runner 
+- If running is succesfull, a simple index page linking to the Swagger UI and the generated OpenApi Json will be served up.
+
+
+### Testing
+
+Testing makes use of the standard MSTest.TestFramework.  
+All tests contained in a single class called BasketIntegrationTests.  
+Tests test from the produced client inwards through the API 
+_(This results in ~100% test coverage, drove behaviour and test driven development but given more time, unit tests would have been introduced against service and repository levels)_
+
+CI Build (AppVeyor - Tests not being detected, ran out of time to fix)  
 https://ci.appveyor.com/project/wlinde01/basketapi/
 
 
-
-## ToDo / POA
-* Introduce blank WebApi project 
-* Introduce simple health check
-* Work out RESTfull specification
-* Build out Contract / Model (keep simple, 1-2-1 mapping)
-* Build out endpoints
-  * Do one single vertical function to introduce a full vertical (test/client/controller/service/repo)
-    * Probably create or get basket item
-    * Test from client inwards through API 
-  * Repeat for each endpoint / function required
-* Do any final refactoring
-* Time permits - Wire in AWS CodeDeploy/Pipeline or AppV or such
-* Documentation if needed
-
-## Assumptions
+## Specification Assumptions
 * Security is dealt with externally, probably at network level (Subnets, SecurityGroups etc.)
 * Data model IDs are generated from the outside (for purposes of InMemoryRepository produced)
 * Single tenant API
-* Async is preferred and implemented
+* Async is preferred and implemented (With simulated repository async functions)
 * "Integration" testing via the Client is adequate at this stage. 
-* Stats and graphs out of scope 
-* Logging optional at this stage - (might add a filter based quick solution - time permits) 
+* Stats and graphs out of scope (For production versions this would not be the case)
+* Application logging is out of scope (For production versions this would not be the case)
 * Probably has rational db underlying Repo (building something that should fit simple normalised architecture)
-* Swagger documentation Adequate 
+* Swagger as documentation and OpenAPI json adequate for endpoint specification
 * Assumptions encountered during dev:
   * Nothing sensitive goes into requests, so logging request data outwards is safe
   * Bad Request response (400s) is adequate from the controller endpoints when the service & repository can not complete it's job (like deleting an item that does not exist)
   * Bad request will not be thrown by the controller for Actual exceptions encountered in the stack, those will bubble upwards and ultimately result in Internal Server Error (500s) responses
-  
+ 
 
-
-
-### Api Specs:
+### Api Specs summary:
 
 **Create a new basket**  
 _POST /api/Basket_  

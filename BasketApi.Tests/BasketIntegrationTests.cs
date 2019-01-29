@@ -8,11 +8,10 @@ using BasketApi.Contracts;
 using Microsoft.Owin.Hosting;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-
-namespace BasketApi.Tests.Controllers
+namespace BasketApi.Tests
 {
     [TestClass]
-    public class BasketControllerTests : IDisposable
+    public class BasketIntegrationTests : IDisposable
     {
 
         private static IDisposable _owinServer;

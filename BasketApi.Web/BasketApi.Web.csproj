@@ -112,7 +112,9 @@
     </Compile>
     <Compile Include="Models\BasketModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Repositories\InMemoryRepositoryService.cs" />
     <Compile Include="Repositories\IRepositoryService.cs" />
+    <Compile Include="Services\BasketService.cs" />
     <Compile Include="Services\IBasketService.cs" />
   </ItemGroup>
   <ItemGroup>
