@@ -47,7 +47,7 @@ namespace BasketApi.Tests
 
 
         [TestMethod]
-        [ExpectedException(typeof(Exception))]
+        [ExpectedException(typeof(BasketApiClientException))]
         public async Task CreatingBasketThatAlreadyExistsThrowsException()
         {
             var expectedBasketContract = GenerateBasketContract(1);
@@ -74,7 +74,7 @@ namespace BasketApi.Tests
         }
 
         [TestMethod]
-        [ExpectedException(typeof(Exception))]
+        [ExpectedException(typeof(BasketApiClientException))]
         public async Task GetBasketByIdThatDoesNotExistThrowsException()
         {
             await _client.GetBasketById(-1);
@@ -93,7 +93,7 @@ namespace BasketApi.Tests
         }
 
         [TestMethod]
-        [ExpectedException(typeof(Exception))]
+        [ExpectedException(typeof(BasketApiClientException))]
         public async Task CreatingDupplicateItemThrowsException()
         {
             // Setup a new basket and try to re-add existing basketItem to it 
@@ -105,7 +105,7 @@ namespace BasketApi.Tests
 
 
         [TestMethod]
-        [ExpectedException(typeof(Exception))]
+        [ExpectedException(typeof(BasketApiClientException))]
         public async Task RemovingNoneExistingItemThrowsException()
         {
             // Remove an item that does not exist
@@ -113,7 +113,7 @@ namespace BasketApi.Tests
         }
 
         [TestMethod]
-        [ExpectedException(typeof(Exception))]
+        [ExpectedException(typeof(BasketApiClientException))]
         public async Task RemovingNoneExistingItemsThrowsException()
         {
             // Remove items from a basket that does not exist
@@ -121,7 +121,7 @@ namespace BasketApi.Tests
         }
 
         [TestMethod]
-        [ExpectedException(typeof(Exception))]
+        [ExpectedException(typeof(BasketApiClientException))]
         public async Task ChangingNoneExistingBasketQuantitiesThrowsException()
         {
             // Increase quantity from an item that does not exist

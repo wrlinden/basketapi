@@ -7,6 +7,14 @@ using BasketApi.Contracts;
 namespace BasketApi.Client
 {
 
+    public class BasketApiClientException : Exception
+    {
+        public int StatusCode { get; set; }
+
+        public string Content { get; set; }
+    }
+
+
     public class BasketClient
     {
 
@@ -86,12 +94,19 @@ namespace BasketApi.Client
 
         private static void ThrowExceptionIfUnsuccessfullStatusCode(HttpResponseMessage response)
         {
+            
+            var content =$"Problem with request to Add basket Item endpoint with Response : " 
+                                   + $"{response.RequestMessage}\n"
+                                   + $"{response.ReasonPhrase}";
 
-            if (!response.IsSuccessStatusCode)
-                throw new Exception("Problem with request to Add basket Item endpoint with Response : " +
-                                    $"{response.StatusCode}\n " +
-                                    $"{response.RequestMessage}\n " +
-                                    $"{response.ReasonPhrase}");
+            if (response.IsSuccessStatusCode == false)
+            {
+                throw new BasketApiClientException
+                {
+                    StatusCode = (int)response.StatusCode,
+                    Content = content
+                };
+            }
         }
 
     }
